@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+    {% if category %}
+         {{ category.description|truncatewords:155 }}
+    {% else %}
+       welcome to ABC Store where you can buy
+    {% endif %}
+{% endblock %}
+{% block title %}
+    {% if category %}
+         {{ category.name }} - ABC Store
+    {% else %}
+       See our New collection-ABC Store
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if category %}
+
+   <div>
+      <div class="row my_row_class">
+          <div class="mx-auto">
+            <p><a href="{% url 'shopapp:allProdCat' %}">our product collection"</a></p>
+          </div>
+      </div>
+   </div>
+   {% endif %}
+ <div class="mx-auto">
+    {% if category %}
+    <img class="my_image" src="{{category.image.url}}" alt="{{category.name}}">
+ </div>
+      <br>
+ <div>
+    <h1 class="text-center my_title">{{category.name}}</h1>
+    <p class="text-justify"> {{category.description}} </p>
+ </div>
+     {% else %}
+ <div>
+   <img class="my_image my_image_padding" src="{% static 'img/banner.png' %}" alt="our products" width="1250px;">
+ </div>
+ <br>
+ <div>
+    <h1 class="text-center my_title"> Our products collections</h1>
+    <p class="text-justify"> Every day is an apology to my humanity; because I am not perfect, I get to try again and again to "get it right." I breathe the peace of eternity, knowing that this stage is temporary; real existence is continuous. The hourglass of life incessantly trickles on and we are powerless to stop it.</p>
+ </div>
+     {% endif %}
+<div class="container">
+    <div class="row mx_auto">
+        {% for product in products.object_list %}
+         <div class="col-md-4 d-flex align-items-stretch" >
+              <div class="card">
+                  <a href="{{product.get_url}}">
+                      <img src="{{product.image.url}}" class="card-img-top "   alt="{{product.name}}" height="150" width="100"> </a>
+              <div class="card-body">
+                  <h4>{{product.name}}</h4>
+                  <p>{{product.price}}</p>
+                  <p>{{product.description}} </p>
+              </div>
+              </div>
+         </div>
+     {% endfor %}
+    </div>
+    <div class="mx-auto">
+        {% if products.paginator.num_pages > 1 %}
+         <hr>
+        <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+              <a href="?page={{ pg }}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{ pg }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <br>
+</div>
+{% endblock %}
